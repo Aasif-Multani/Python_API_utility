@@ -1,7 +1,10 @@
 import requests
 import csv
-import datetime
 import configparser
+
+import json
+import os
+from datetime import datetime
 
 
 # Function to call /pull/token API endpoint and return token
@@ -41,30 +44,52 @@ def get_itineraries(token, client_id, auth_basic):
         raise ValueError(f'Error getting itineraries: {error_msg}')
 
 
-# Function to write itineraries to CSV file
-def write_to_csv(itineraries):
-    # Validate JSON response
-    if not isinstance(itineraries, list):
-        raise ValueError('Itineraries is not a list')
-    for itinerary in itineraries:
-        if not isinstance(itinerary, dict):
-            raise ValueError('Itinerary is not a dictionary')
-        required_keys = ['guid', 'createdAt', 'name', 'itineraryId', 'updatedAt']
-        missing_keys = [key for key in required_keys if key not in itinerary]
-        if missing_keys:
-            for key in missing_keys:
-                itinerary[key] = None
+# Function to write itineraries to CSV, JSON, and plain text file
+def write_to_file(output_file_path, data):
+    """
+    Write the given data to a CSV, JSON, and plain text file.
 
-    # Write to CSV file
-    today = datetime.date.today()
-    file_name = str(today) + '_output.csv'
-    with open(file_name, 'w', newline='') as csvfile:
-        fieldnames = ['guid', 'createdAt', 'name', 'itineraryId', 'updatedAt']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    :param output_file_path: Path to the output file directory.
+    :param data: List of dictionaries containing itinerary data.
+    """
 
-        writer.writeheader()
-        for itinerary in itineraries:
-            writer.writerow(itinerary)
+    # Create the output directory if it doesn't exist.
+    os.makedirs(output_file_path, exist_ok=True)
+
+    # Define the filenames for the CSV, JSON, and text files.
+    today = datetime.now().strftime('%Y-%m-%d')
+    csv_file_name = f'{today}_output.csv'
+    json_file_name = f'{today}_output.json'
+    text_file_name = f'{today}_output.txt'
+
+    # Define the paths to the CSV, JSON, and text files.
+    csv_file_path = os.path.join(output_file_path, csv_file_name)
+    json_file_path = os.path.join(output_file_path, json_file_name)
+    text_file_path = os.path.join(output_file_path, text_file_name)
+
+    # Write to the CSV file.
+    with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(['guid', 'created', 'name', 'itinerary', 'updated'])
+        for row in data:
+            writer.writerow([row.get('guid', ''),
+                             row.get('created', ''),
+                             row.get('name', ''),
+                             row.get('itinerary', ''),
+                             row.get('updated', '')])
+
+    # Write to the JSON file.
+    with open(json_file_path, 'w', encoding='utf-8') as json_file:
+        json.dump(data, json_file, ensure_ascii=False, indent=4)
+
+    # Write to the plain text file.
+    with open(text_file_path, 'w', encoding='utf-8') as text_file:
+        for row in data:
+            text_file.write(f"{row.get('guid', '')}\t"
+                            f"{row.get('created', '')}\t"
+                            f"{row.get('name', '')}\t"
+                            f"{row.get('itinerary', '')}\t"
+                            f"{row.get('updated', '')}\n")
 
 
 # Function to validate the client_id and auth_basic parameters
@@ -86,7 +111,8 @@ def main():
     validate_input(client_id, auth_basic)
     token = get_token(client_id, auth_basic)
     itineraries = get_itineraries(token, client_id, auth_basic)
-    write_to_csv(itineraries)
+    write_to_file(itineraries)
+
 
 if __name__ == '__main__':
     main()

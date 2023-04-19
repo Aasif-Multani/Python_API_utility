@@ -58,38 +58,38 @@ def write_to_file(output_file_path, data):
 
     # Define the filenames for the CSV, JSON, and text files.
     today = datetime.now().strftime('%Y-%m-%d')
-    csv_file_name = f'{today}_output.csv'
+#    csv_file_name = f'{today}_output.csv'
     json_file_name = f'{today}_output.json'
-    text_file_name = f'{today}_output.txt'
+#    text_file_name = f'{today}_output.txt'
 
     # Define the paths to the CSV, JSON, and text files.
-    csv_file_path = os.path.join(output_file_path, csv_file_name)
+#    csv_file_path = os.path.join(output_file_path, csv_file_name)
     json_file_path = os.path.join(output_file_path, json_file_name)
-    text_file_path = os.path.join(output_file_path, text_file_name)
+#    text_file_path = os.path.join(output_file_path, text_file_name)
 
     # Write to the CSV file.
-    with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
-        writer = csv.writer(csv_file)
-        writer.writerow(['guid', 'created', 'name', 'itinerary', 'updated'])
-        for row in data:
-            writer.writerow([row.get('guid', ''),
-                             row.get('created', ''),
-                             row.get('name', ''),
-                             row.get('itinerary', ''),
-                             row.get('updated', '')])
+#    with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
+#        writer = csv.writer(csv_file)
+#        writer.writerow(['guid', 'created', 'name', 'itinerary', 'updated'])
+#        for row in data:
+#            writer.writerow([row.get('guid', ''),
+#                             row.get('created', ''),
+#                             row.get('name', ''),
+#                             row.get('itinerary', ''),
+#                             row.get('updated', '')])
 
     # Write to the JSON file.
     with open(json_file_path, 'w', encoding='utf-8') as json_file:
         json.dump(data, json_file, ensure_ascii=False, indent=4)
 
     # Write to the plain text file.
-    with open(text_file_path, 'w', encoding='utf-8') as text_file:
-        for row in data:
-            text_file.write(f"{row.get('guid', '')}\t"
-                            f"{row.get('created', '')}\t"
-                            f"{row.get('name', '')}\t"
-                            f"{row.get('itinerary', '')}\t"
-                            f"{row.get('updated', '')}\n")
+ #   with open(text_file_path, 'w', encoding='utf-8') as text_file:
+ #       for row in data:
+ #           text_file.write(f"{row.get('guid', '')}\t"
+ #                           f"{row.get('created', '')}\t"
+ #                           f"{row.get('name', '')}\t"
+ #                           f"{row.get('itinerary', '')}\t"
+ #                           f"{row.get('updated', '')}\n")
 
 
 # Function to validate the client_id and auth_basic parameters

@@ -57,10 +57,10 @@ def write_to_file(output_file_path, data):
     os.makedirs(output_file_path, exist_ok=True)
 
     # Define the filenames for the CSV, JSON, and text files.
-    today = datetime.now().strftime('%Y-%m-%d')
-#    csv_file_name = f'{today}_output.csv'
-    json_file_name = f'{today}_output.json'
-#    text_file_name = f'{today}_output.txt'
+    current_time = datetime.now()
+#    csv_file_name = f'itineraries_{current_time}_output.csv'
+    json_file_name = f'itineraries_{current_time}.json'
+#    text_file_name = f'itineraries_{current_time}_output.txt'
 
     # Define the paths to the CSV, JSON, and text files.
 #    csv_file_path = os.path.join(output_file_path, csv_file_name)
